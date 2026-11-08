@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лошади и люди</title>
+<style>
+  :root {
+    --bg: #0e0f14;
+    --card: rgba(255,255,255,0.06);
+    --accent: #f0b35c;
+    --accent2: #e8734a;
+    --text: #f3f1ea;
+    --muted: #b9b5aa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Шапка */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(14px);
+    background: rgba(14,15,20,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav {
+    max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 0.5px; }
+  .logo span { color: var(--accent); }
+  nav a {
+    color: var(--muted); text-decoration: none; margin-left: 26px;
+    position: relative; transition: color .3s;
+  }
+  nav a::after {
+    content: ''; position: absolute; left: 0; bottom: -6px;
+    width: 0; height: 2px; background: var(--accent);
+    transition: width .3s ease;
+  }
+  nav a:hover { color: var(--text); }
+  nav a:hover::after { width: 100%; }
+
+  /* Общее */
+  section { max-width: 1100px; margin: 0 auto; padding: 90px 24px; }
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin-bottom: 40px; position: relative; display: inline-block;
+  }
+  h2::after {
+    content: ''; position: absolute; left: 0; bottom: -10px;
+    width: 60px; height: 4px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .muted { color: var(--muted); }
+
+  /* Герой */
+  .hero {
+    min-height: 88vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding-top: 60px;
+    background:
+      radial-gradient(ellipse at 80% 10%, rgba(240,179,92,0.12), transparent 55%),
+      radial-gradient(ellipse at 10% 90%, rgba(232,115,74,0.10), transparent 55%);
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 1.1; margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p { max-width: 560px; color: var(--muted); font-size: 1.15rem; margin-bottom: 36px; }
+  .btn {
+    display: inline-block; padding: 14px 34px; border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #1a1206; font-weight: 700; text-decoration: none;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 14px 34px rgba(240,179,92,0.35);
+  }
+
+  /* Карточки */
+  .grid {
+    display: grid; gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 28px;
+    transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(240,179,92,0.55);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  }
+  .card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+  .card .tag {
+    display: inline-block; font-size: .78rem; letter-spacing: 1px;
+    color: var(--accent); border: 1px solid rgba(240,179,92,0.4);
+    padding: 3px 12px; border-radius: 100px; margin-bottom: 14px;
+  }
+
+  /* Фото с плавным зумом */
+  .photo {
+    border-radius: 22px; overflow: hidden; position: relative;
+    margin-top: 50px;
+  }
+  .photo img {
+    width: 100%; height: 420px; object-fit: cover; display: block;
+    transition: transform .8s ease;
+  }
+  .photo:hover img { transform: scale(1.06); }
+  .photo figcaption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 40px 24px 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    font-size: .95rem; color: var(--muted);
+  }
+
+  /* Список советов */
+  .tips { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .tip {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--card); border-radius: 16px; padding: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform .3s, border-color .3s;
+  }
+  .tip:hover { transform: translateX(8px); border-color: rgba(240,179,92,0.5); }
+  .tip b { color: var(--accent); }
+  .num {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #1a1206; font-weight: 800;
+  }
+
+  footer {
+    text-align: center; padding: 50px 20px; color: var(--muted);
+    border-top: 1px solid rgba(255,255,255,0.08); font-size: .9rem;
+  }
+
+  /* Появление при прокрутке */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.on { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">Лошади<span>&amp;</span>люди</div>
+    <nav>
+      <a href="#breeds">Породы</a>
+      <a href="#care">Уход</a>
+      <a href="#riding">Верховая езда</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Лошади и <em>люди</em></h1>
+  <p>Шесть тысяч лет рядом с человеком: породы, уход и радость верховой езды — всё самое интересное о благородных животных в одном месте.</p>
+  <a class="btn" href="#breeds">Начать знакомство</a>
+</section>
+
+<section id="breeds">
+  <h2 class="reveal">Знаменитые породы</h2>
+  <div class="grid">
+    <div class="card reveal">
+      <span class="tag">Аравия</span>
+      <h3>Арабская</h3>
+      <p class="muted">Грациозная, выносливая и умная. Вогнутый профиль головы узнаётся с первого взгляда, а энергия — с первого шага.</p>
+    </div>
+    <div class="card reveal">
+      <span class="tag">Туркменистан</span>
+      <h3>Ахалтекинская</h3>
+      <p class="muted">«Золотая лошадь» с металлическим отливом шерсти. Одна из древнейших пород — гордость восточных коневодов.</p>
+    </div>
+    <div class="card reveal">
+      <span class="tag">Нидерланды</span>
+      <h3>Фризская</h3>
+      <p class="muted">Вороная красавица с длинными фризами и ниспадающей гривой. Идеальна для выездки и эффектных съёмок.</p>
+    </div>
+    <div class="card reveal">
+      <span class="tag">Россия</span>
+      <h3>Орловский рысак</h3>
+      <p class="muted">Легендарная русская порода, выведенная графом Орловым. Быстрые, статные и невероятно преданные.</p>
+    </div>
+  </div>
+</section>
+
+<section id="care">
+  <h2 class="reveal">Уход — это любовь в деталях</h2>
+  <div class="tips">
+    <div class="tip reveal"><div class="num">1</div><p><b>Чистка</b> — ежедневная расчёска щёткой и полировка замшей делают шерсть блестящей и укрепляют доверие.</p></div>
+    <div class="tip reveal"><div class="num">2</div><p><b>Копыта</b> — осмотр и расчистка перед каждой поездкой. Ковку обновляют раз в 4–6 недель.</p></div>
+    <div class="tip reveal"><div class="num">3</div><p><b>Питание</b> — сено, свежая вода и соль всегда в доступе. Овёс и подкормки — дозированно, без «перекорма».</p></div>
+    <div class="tip reveal"><div class="num">4</div><p><b>Движение</b> — лошади нужны прогулки и общение с сородичами каждый день, а не только работа под седлом.</p></div>
+  </div>
+
+  <figure class="photo reveal">
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Horse_posing_in_the_grass.jpg?width=1600"
+         alt="Лошади на рассвете" onerror="this.parentElement.style.background='linear-gradient(135deg,#3b3b5c,#e8734a)';this.remove()">
+    <figcaption>Утренний выгул — лучшее время для контакта с лошадью</figcaption>
+  </figure>
+</section>
+
+<section id="riding">
+  <h2 class="reveal">Верховая езда с нуля</h2>
+  <div class="grid">
+    <div class="card reveal">
+      <h3>Первый шаг — доверие</h3>
+      <p class="muted">Знакомство с лошадью начинается на земле: спокойный голос, поглаживания, чтение её языка тела. Уши прижаты — лошадь тревожится.</p>
+    </div>
+    <div class="card reveal">
+      <h3>Посадка и баланс</h3>
+      <p class="muted">Прямая спина, мягкая посадка, пятка чуть ниже носка. Главное — дышать и расслабляться: лошадь чувствует ваше напряжение.</p>
+    </div>
+    <div class="card reveal">
+      <h3>Алюр за алюром</h3>
+      <p class="muted">Шаг — рысь — галоп. Осваивают их строго по порядку, с тренером и на спокойной лошади. Терпение здесь решает всё.</p>
+    </div>
+  </div>
+
+  <figure class="photo reveal">
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Auf_dem_R%C3%BCcken_der_Pferde.jpg?width=1600"
+         alt="Всадник на лошади" onerror="this.parentElement.style.background='linear-gradient(135deg,#2d3561,#f0b35c)';this.remove()">
+    <figcaption>Доверие между всадником и лошадью — основа каждой поездки</figcaption>
+  </figure>
+</section>
+
+<footer>
+  Лошади и люди © 2026 · Сделано с любовью к коням
+</footer>
+
+<script>
+  // Плавное появление блоков при прокрутке
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
